@@ -4,7 +4,9 @@ on:
   push:
     tags: 
     - '*'
-
+    branches: 
+    - '*'
+    
 jobs:
   lint_test:
     runs-on: ${{ matrix.os }}
