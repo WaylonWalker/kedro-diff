@@ -2,6 +2,7 @@ name: Kedro Diff Package
 
 on:
   push:
+    tags: 
     - '*'
 
 jobs:
