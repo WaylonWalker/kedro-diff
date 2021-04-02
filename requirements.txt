@@ -1,0 +1,4 @@
+click
+kedro
+more_itertools
+rich
