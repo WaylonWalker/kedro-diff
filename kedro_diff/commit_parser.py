@@ -27,9 +27,9 @@ def parse_commit(commit: Union[str, Tuple[str, ...]]) -> Tuple[str, str]:
         return parse_commit(tuple(commit.split("..")))
     else:
         if "..." in str(commit):
-            return parse_commit(list(flatten([c.split("...") for c in commit])))
+            return parse_commit(tuple(flatten([c.split("...") for c in commit])))
         if ".." in str(commit):
-            return parse_commit(list(flatten([c.split("..") for c in commit])))
+            return parse_commit(tuple(flatten([c.split("..") for c in commit])))
 
     if len(commit) == 0:
         raise KedroDiffError(
@@ -67,4 +67,4 @@ if __name__ == "__main__":
     import sys
 
     print(sys.argv[1:])
-    print(parse_commit(sys.argv[1:]))
+    print(parse_commit(tuple(sys.argv[1:])))
