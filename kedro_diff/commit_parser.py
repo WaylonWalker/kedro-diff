@@ -12,7 +12,9 @@ from kedro_diff.errors import KedroDiffError
 __version__ = "0.0.0"
 
 
-def parse_commit(commit: Union[str, Tuple[str, ...]]) -> Tuple[str, str]:
+def parse_commit(
+    commit: Union[str, Tuple[str, ...]], verbose: int = 0
+) -> Tuple[str, str]:
     """
     Parse input commit into two commits for comparing.
 
@@ -58,6 +60,8 @@ def parse_commit(commit: Union[str, Tuple[str, ...]]) -> Tuple[str, str]:
             f"at least one commit must be passed to compare\n recieved {commit}"
         )
     logger = logging.getLogger(__name__)
+    if verbose < 1:
+        logger.setLevel(logging.ERROR)
     logger.info(f"comparing {commit1} to {commit2}")
 
     return commit1, commit2
