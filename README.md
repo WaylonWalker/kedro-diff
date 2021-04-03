@@ -52,22 +52,23 @@ kedro diff develop..master
 ## Roadmap
 
 ### 1.0.0
-[x] commit parser
-[x] get `pipeline.to_json()` for `__default__` for two different commits
-[ ] get `pipeline.to_json()` for all pipelines for two different commits
-[x] --stat compares the number of nodes added or dropped in `__default__`
-[ ] --stat compares the number of nodes added or dropped in all pipelines
-[ ] compare input names
-[ ] compare output names
+
+- [x] commit parser
+- [x] get `pipeline.to_json()` for `__default__` for two different commits
+- [ ] get `pipeline.to_json()` for all pipelines for two different commits
+- [x] --stat compares the number of nodes added or dropped in `__default__`
+- [ ] --stat compares the number of nodes added or dropped in all pipelines
+- [ ] compare input names
+- [ ] compare output names
 
 ### 2.0.0
 
-_super-size `pipeline.to_json()`
+_super-size `pipeline.to_json()`_
 
-[ ] function names
-[ ] function hashes
-[ ] catalog _filepath
-[ ] catalog _sql
+- [ ] function names
+- [ ] function hashes
+- [ ] catalog _filepath
+- [ ] catalog _sql
 
 ## Testing
 
