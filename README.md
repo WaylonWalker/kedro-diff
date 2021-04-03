@@ -48,3 +48,32 @@ kedro diff develop..master
 ╰──────────────────────────────────────────────────────────────────────────────╯
 + split_data
 ```
+
+## Roadmap
+
+### 1.0.0
+[x] commit parser
+[x] get `pipeline.to_json()` for `__default__` for two different commits
+[ ] get `pipeline.to_json()` for all pipelines for two different commits
+[x] --stat compares the number of nodes added or dropped in `__default__`
+[ ] --stat compares the number of nodes added or dropped in all pipelines
+[ ] compare input names
+[ ] compare output names
+
+### 2.0.0
+
+_super-size `pipeline.to_json()`
+
+[ ] function names
+[ ] function hashes
+[ ] catalog _filepath
+[ ] catalog _sql
+
+## Testing
+
+This project strives for 100% test coverage where it makes sense.  Other kedro
+plugins I have created have suffered development speed by the complexity of
+fully testing on a full kedro project. There are so many pieces to get into
+place that it becomes difficult to test accross multiple versions of kedro or
+keep the tests working as kedro changes.  Minimal functionality will be placed
+into modules that require a kedro full kedro project in place to work.
