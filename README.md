@@ -66,6 +66,7 @@ kedro diff develop..master
 - [ ] --stat compares the number of nodes added or dropped in all pipelines
 - [ ] compare input names
 - [ ] compare output names
+- [ ] speed up getting repeat commits by checking commit hash
 
 ### 2.0.0
 
