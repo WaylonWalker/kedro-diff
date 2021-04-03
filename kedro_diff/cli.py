@@ -64,7 +64,6 @@ def cli() -> None:
     help="verbosity level, -v enables diff related logs, -vv enables all logs",
 )
 @click.option("-q", "--quiet", is_flag=True, help="runs completely quiet")
-# @click.argument("commit", nargs=-1)
 @click.pass_obj
 def get_json(
     metadata: "ProjectMetadata", output: IO, verbose: int, quiet: bool
@@ -76,8 +75,6 @@ def get_json(
     logger.setLevel(logging.INFO)
     if verbose < 1:
         logger.setLevel(logging.ERROR)
-
-        # commits = parse_commit(commit)
 
     if verbose < 2:
         silent_loggers()
