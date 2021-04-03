@@ -3,18 +3,18 @@
 Parses user input into two commits to compare
 """
 import logging
+from typing import Tuple, Union
+
 from more_itertools import flatten
+
 from kedro_diff.errors import KedroDiffError
 
 __version__ = "0.0.0"
 
 
-from typing import Union, Tuple
-
-
 def parse_commit(commit: Union[str, Tuple[str, ...]]) -> Tuple[str, str]:
     """
-    Parses input commit into two commits for comparing.
+    Parse input commit into two commits for comparing.
 
     Exampe:
     parse_commit('develop..main')

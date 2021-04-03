@@ -1,9 +1,9 @@
-"""
-Test commit parser.
-"""
+"""Test commit parser."""
+
+import pytest
+
 from kedro_diff.commit_parser import parse_commit
 from kedro_diff.errors import KedroDiffError
-import pytest
 
 
 @pytest.mark.parametrize(
@@ -33,9 +33,7 @@ import pytest
     ],
 )
 def test_parse(commit, expected):
-    """
-    Test Commit input is parsed as expected.
-    """
+    """Test Commit input is parsed as expected."""
     if type(expected) == type and issubclass(expected, Exception):
         with pytest.raises(expected):
             commit1, commit2 = parse_commit(commit)
