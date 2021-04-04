@@ -14,3 +14,7 @@ __version__ = "0.0.0"
 __author__ = ("Waylon Walker",)
 __author_email__ = ("waylon@waylonwalker.com",)
 __license__ = "MIT"
+
+__all__ = ["KedroDiff"]
+
+from kedro_diff.diff import KedroDiff
