@@ -1,0 +1,21 @@
+{
+    "kedro_version": "0.17.2",
+    "pipeline": [
+        {
+            "name": "node1",
+            "inputs": [],
+            "outputs": [
+                "output1"
+            ],
+            "tags": ["tag1"]
+        },
+        {
+            "name": "node2",
+            "inputs": ["output1"],
+            "outputs": [
+                "output2"
+            ],
+            "tags": ["tag2"]
+        }
+    ]
+}
