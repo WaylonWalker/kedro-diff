@@ -1,17 +1,85 @@
+"""Diff.
+
+Core diffing logic for kedro diff.
+"""
 from typing import Dict
 
 from rich.console import Console
 
+from kedro_diff.sample_data import create_simple_sample
+
 
 class KedroDiff:
+    """KedroDiff.
+
+    Compare kedro two pipelines
+
+    Parameters
+    --------
+        pipe1 : Dict
+            base pipeline
+        pipe2 : Dict
+            pipeline to compare to the base pipeline
+        name : str
+            name of the pipeline that is being compared
+
+    Examples
+    --------
+        >>> from kedro_diff import KedroDiff
+        >>> diff = KedroDiff.from_sample({"num_nodes": 2}, {"num_nodes": 4})
+        >>> diff.stat()
+        M __default__                    | 2 ++
+    """
+
     def __init__(self, pipe1: Dict, pipe2: Dict, name: str = "__default__") -> None:
         self.pipe1 = pipe1["pipeline"]
         self.pipe2 = pipe2["pipeline"]
         self.name = name
         self.console = Console()
 
+    @classmethod
+    def from_sample(
+        cls, pipe1_args: Dict, pipe2_args: Dict, name: str = "__default__"
+    ) -> "KedroDiff":
+        """
+        Creates a KedroDiff from `create_simple_sample` arguuments.
+
+        Parameters
+        --------
+        pipe1_args : dict
+            arguments used to create pipe1
+        pipe2_args : dict
+            arguments used to create pipe2
+        name : str
+            name of the pipeline that is being compared
+
+        See Also
+        --------
+        kedro_diff.sample_data.create_simple_sample
+
+        Examples
+        --------
+            >>> from kedro_diff import KedroDiff
+            >>> diff = KedroDiff.from_sample({"num_nodes": 2}, {"num_nodes": 4})
+            >>> diff.stat()
+            M __default__                    | 2 ++
+
+        """
+        pipe1 = create_simple_sample(**pipe1_args)
+        pipe2 = create_simple_sample(**pipe2_args)
+        return cls(pipe1=pipe1, pipe2=pipe2, name=name)
+
     @property
     def new_nodes(self) -> set:
+        """
+        Compares
+
+        Returns
+        --------
+        set
+            a set of new nodes.
+
+        """
         return set([node["name"] for node in self.pipe2]).difference(
             set([node["name"] for node in self.pipe1])
         )
@@ -86,7 +154,6 @@ class KedroDiff:
 
 
 def example() -> None:
-    from kedro_diff.sample_data import create_simple_sample
     from copy import deepcopy
 
     pipe10 = create_simple_sample(10)
