@@ -31,14 +31,18 @@ class KedroDiff:
 
 
 if __name__ == "__main__":
-    from kedro_diff.sample_data import create_simple_sample, empty, one_node, two_nodes
+    from kedro_diff.sample_data import create_simple_sample
 
     console = Console()
     console.print("[gold1]KedroDiff Examples[/]\n")
     console.print("[brightblack]KedroDiff.stat()[/]\n")
-    KedroDiff(empty, one_node).stat()
-    KedroDiff(empty, two_nodes, name="two_new_nodes").stat()
-    KedroDiff(empty, create_simple_sample(12), name="twelve_new_nodes").stat()
+    KedroDiff(create_simple_sample(0), create_simple_sample(1)).stat()
+    KedroDiff(
+        create_simple_sample(0), create_simple_sample(2), name="two_new_nodes"
+    ).stat()
+    KedroDiff(
+        create_simple_sample(0), create_simple_sample(12), name="twelve_new_nodes"
+    ).stat()
     KedroDiff(
         create_simple_sample(10, name_prefix="first"),
         create_simple_sample(12),
