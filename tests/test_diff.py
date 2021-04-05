@@ -1,4 +1,5 @@
 import json
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -7,6 +8,11 @@ from kedro_diff import KedroDiff
 from kedro_diff.sample_data import create_simple_sample
 
 DATA = Path(__file__).parent / "sample-data"
+
+pipe10 = create_simple_sample(10)
+pipe10_change_one_input = deepcopy(pipe10)
+pipe10_change_one_input["pipeline"][2]["inputs"] = "input1"
+
 
 pipe_params = [
     {
@@ -36,6 +42,13 @@ pipe_params = [
         "pipe2": create_simple_sample(10, name_prefix="second"),
         "expected_contains": ("M", "20", "__default__", "+" * 10, "-" * 10),
         "expected_not_contains": ("+" * 11, "-" * 11, "??", "data_engineering"),
+    },
+    {
+        "name": "__default__",
+        "pipe1": pipe10,
+        "pipe2": pipe10_change_one_input,
+        "expected_contains": ("M", "1", "__default__", "+"),
+        "expected_not_contains": ("+" * 2, "-", "??", "data_engineering"),
     },
 ]
 

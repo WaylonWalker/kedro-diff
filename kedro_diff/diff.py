@@ -23,8 +23,38 @@ class KedroDiff:
         )
 
     @property
+    def not_new_dropped_nodes(self) -> set:
+        return (
+            set([node["name"] for node in self.pipe2])
+            - self.new_nodes
+            - self.dropped_nodes
+        )
+
+    @property
+    def change_input(self) -> set:
+        return set(
+            [
+                str({node["name"]: node["inputs"]})
+                for node in self.pipe2
+                if node["name"] in self.not_new_dropped_nodes
+            ]
+        ).difference(
+            set(
+                [
+                    str({node["name"]: node["inputs"]})
+                    for node in self.pipe1
+                    if node["name"] in self.not_new_dropped_nodes
+                ]
+            )
+        )
+
+    @property
+    def num_changes(self) -> int:
+        return len(self.new_nodes) + len(self.dropped_nodes) + len(self.change_input)
+
+    @property
     def _stat_msg(self) -> str:
-        return f'[red]M[/red] {self.name.ljust(20)[:20]} | {len(self.new_nodes) + len(self.dropped_nodes)} [green]{"+" * len(self.new_nodes)}[/green][red]{"-"*len(self.dropped_nodes)}[/red]'
+        return f'[red]M[/red] {self.name.ljust(20)[:20]} | {self.num_changes} [green]{"+" * (len(self.new_nodes) + len(self.change_input))}[/green][red]{"-"*len(self.dropped_nodes)}[/red]'
 
     def stat(self) -> None:
         self.console.print(self._stat_msg)
