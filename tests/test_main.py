@@ -6,8 +6,8 @@ def test_main(capsys):
         ["python", "-m", "kedro_diff"], stderr=subprocess.PIPE, stdout=subprocess.PIPE
     )
     proc.wait()
-    stdout = "".join([str(l) for l in proc.stdout.readlines()])
-    stderr = "".join([str(l) for l in proc.stderr.readlines()])
+    stdout = "".join([str(line) for line in proc.stdout.readlines()])
+    stderr = "".join([str(line) for line in proc.stderr.readlines()])
     assert stderr == ""
     assert_contains = [
         "KedroDiff Examples",
