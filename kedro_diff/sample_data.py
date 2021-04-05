@@ -13,16 +13,23 @@ def create_simple_sample(
 ) -> Dict:
     """Create Sample data for examples and tests.
 
-    Args:
-        num_nodes: number of nodes to generate in the pipeline
-        kedro_version: kedro version to use in the pipeline.json format
-        tagged: to tag the datasets or not
-        name_prefix: prefix to add to the name of each node
+    Parameters
+    --------
+        num_nodes : int
+            number of nodes to generate in the pipeline
+        kedro_version : str
+            kedro version to use in the pipeline.json format
+        tagged : bool
+            to tag the datasets or not
+        name_prefix : str
+            prefix to add to the name of each node
 
-    Returns:
+    Returns
+    --------
         kedro pipeline.json sample data as a dictionary
 
-    Example:
+    Examples
+    --------
         >>> create_simple_sample(1)
         {'kedro_version': '0.17.2', 'pipeline': [{'name': 'node1', 'inputs': ['output0'], 'outputs': ['output1'], 'tags': ['tag1']}]}
 
