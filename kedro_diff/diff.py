@@ -1,4 +1,4 @@
-from typing import Callable, Dict
+from typing import Dict
 
 from rich.console import Console
 
