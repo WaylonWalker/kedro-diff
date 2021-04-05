@@ -54,27 +54,46 @@ class KedroDiff:
 
     @property
     def _stat_msg(self) -> str:
-        return f'[red]M[/red] {self.name.ljust(20)[:20]} | {self.num_changes} [green]{"+" * (len(self.new_nodes) + len(self.change_input))}[/green][red]{"-"*len(self.dropped_nodes)}[/red]'
+        return f'[red]M[/red] {self.name.ljust(30)[:30]} | {self.num_changes} [green]{"+" * (len(self.new_nodes) + len(self.change_input))}[/green][red]{"-"*len(self.dropped_nodes)}[/red]'
 
     def stat(self) -> None:
         self.console.print(self._stat_msg)
 
 
-if __name__ == "__main__":
+def example() -> None:
     from kedro_diff.sample_data import create_simple_sample
+    from copy import deepcopy
+
+    pipe10 = create_simple_sample(10)
+
+    pipe10_change_one_input = deepcopy(pipe10)
+    pipe10_change_one_input["pipeline"][2]["inputs"] = ["input1"]
+
+    pipe10_change_one_output = deepcopy(pipe10)
+    pipe10_change_one_output["pipeline"][2]["outputs"] = ["output1"]
 
     console = Console()
     console.print("[gold1]KedroDiff Examples[/]\n")
     console.print("[brightblack]KedroDiff.stat()[/]\n")
+
     KedroDiff(create_simple_sample(0), create_simple_sample(1)).stat()
+
     KedroDiff(
         create_simple_sample(0), create_simple_sample(2), name="two_new_nodes"
     ).stat()
+
     KedroDiff(
         create_simple_sample(0), create_simple_sample(12), name="twelve_new_nodes"
     ).stat()
+
     KedroDiff(
         create_simple_sample(10, name_prefix="first"),
         create_simple_sample(12),
         name="twelve_new_nodes_ten_dropped_nodes",
+    ).stat()
+
+    KedroDiff(pipe10, pipe10_change_one_input, name="ten_nodes_one_input_change").stat()
+
+    KedroDiff(
+        pipe10, pipe10_change_one_output, name="ten_nodes_one_input_change"
     ).stat()
