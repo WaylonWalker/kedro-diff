@@ -107,3 +107,11 @@ def test_diff_stat(capsys, params):
             assert not_expected not in res
 
     run(**params)
+
+
+def test_diff_from_sample():
+    diff = KedroDiff.from_sample({"num_nodes": 2}, {"num_nodes": 4})
+    assert "__default__" in diff._stat_msg
+    assert "++" in diff._stat_msg
+    assert "+++" not in diff._stat_msg
+    assert "-" not in diff._stat_msg
