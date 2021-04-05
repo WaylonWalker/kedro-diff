@@ -13,6 +13,12 @@ pipe10 = create_simple_sample(10)
 pipe10_change_one_input = deepcopy(pipe10)
 pipe10_change_one_input["pipeline"][2]["inputs"] = "input1"
 
+pipe10_change_one_output = deepcopy(pipe10)
+pipe10_change_one_output["pipeline"][2]["outputs"] = ["output1"]
+
+pipe10_change_one_tag = deepcopy(pipe10)
+pipe10_change_one_tag["pipeline"][2]["tags"] = ["tag1"]
+
 
 pipe_params = [
     {
@@ -47,6 +53,20 @@ pipe_params = [
         "name": "__default__",
         "pipe1": pipe10,
         "pipe2": pipe10_change_one_input,
+        "expected_contains": ("M", "1", "__default__", "+"),
+        "expected_not_contains": ("+" * 2, "-", "??", "data_engineering"),
+    },
+    {
+        "name": "__default__",
+        "pipe1": pipe10,
+        "pipe2": pipe10_change_one_output,
+        "expected_contains": ("M", "1", "__default__", "+"),
+        "expected_not_contains": ("+" * 2, "-", "??", "data_engineering"),
+    },
+    {
+        "name": "__default__",
+        "pipe1": pipe10,
+        "pipe2": pipe10_change_one_tag,
         "expected_contains": ("M", "1", "__default__", "+"),
         "expected_not_contains": ("+" * 2, "-", "??", "data_engineering"),
     },
