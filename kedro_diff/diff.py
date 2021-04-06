@@ -132,18 +132,28 @@ class KedroDiff:
         return (
             len(self.new_nodes)
             + len(self.dropped_nodes)
+            + len(self.change_input) * 2
+            + len(self.change_output) * 2
+            + len(self.change_tag) * 2
+        )
+
+    @property
+    def num_adds(self) -> int:
+        return (
+            len(self.new_nodes)
             + len(self.change_input)
             + len(self.change_output)
             + len(self.change_tag)
         )
 
     @property
-    def num_adds(self) -> int:
-        return self.num_changes - len(self.dropped_nodes)
-
-    @property
     def num_drops(self) -> int:
-        return len(self.dropped_nodes)
+        return (
+            len(self.dropped_nodes)
+            + len(self.change_input)
+            + len(self.change_output)
+            + len(self.change_tag)
+        )
 
     @property
     def _stat_msg(self) -> str:
