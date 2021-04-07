@@ -18,7 +18,7 @@ def copytree(
     ignore: Optional[Callable] = None,
 ) -> None:
     """Copy src director into dst directory."""
-    for item in os.listdir(src):
+    for item in os.listdir(str(src)):
         s = os.path.join(src, item)
         d = os.path.join(dst, item)
         if os.path.isdir(s):
