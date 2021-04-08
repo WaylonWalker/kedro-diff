@@ -2,6 +2,7 @@
 
 Get json from a specific commit
 """
+import json
 import logging
 import os
 import shutil
@@ -36,12 +37,30 @@ def to_json(project_path: Union[str, Path], commit: str, verbose: int = 0) -> No
             logger.setLevel(logging.ERROR)
         logger.info(f"copying {project_path} into {tmpdirname}")
         copytree(project_path, tmpdirname)
-        path = (Path() / ".kedro-diff" / (commit + ".json")).absolute()
-        path.parent.mkdir(exist_ok=True)
+        meta_path = (
+            Path() / ".kedro-diff" / (commit.replace("/", "_") + "-meta.json")
+        ).absolute()
+        meta_path.parent.mkdir(exist_ok=True)
         subprocess.call(f"git checkout {commit} --quiet", shell=True, cwd=tmpdirname)
+
         subprocess.call(
-            f"kedro get-json --output {path} --quiet", shell=True, cwd=tmpdirname
+            f"kedro get-json --meta --output {meta_path} --quiet --commit {commit}",
+            shell=True,
+            cwd=tmpdirname,
         )
+
+        meta = json.loads(meta_path.read_text())
+        for pipeline in meta["pipelines"]:
+            pipeline_path = (
+                Path()
+                / ".kedro-diff"
+                / ("_".join([commit, pipeline]).replace("/", "_") + ".json")
+            ).absolute()
+            subprocess.call(
+                f"kedro get-json --output {pipeline_path} --pipeline-name {pipeline} --quiet",
+                shell=True,
+                cwd=tmpdirname,
+            )
 
 
 if __name__ == "__main__":
