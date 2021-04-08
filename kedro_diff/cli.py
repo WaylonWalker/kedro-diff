@@ -145,6 +145,22 @@ def diff(
 
 
 def load_json(commit: str, pipeline_name: str) -> Any:
+    """
+    Tries to load pipeline data from, if one is not found it returns an empty pipeline.
+
+    Parameters
+    --------
+        commit : str
+            a commit to load pipeline data for.
+        pipeline_name : str
+            a pipeline to load pipeline data for.
+
+    Returns
+    --------
+        dict
+            pipeline data
+
+    """
     try:
         return json.loads(
             (
@@ -157,6 +173,18 @@ def load_json(commit: str, pipeline_name: str) -> Any:
 
 
 def diff_stat(commit1: str, commit2: str, pipeline_name: str = "__default__") -> None:
+    """
+    Does a diff --stat for the given pipeline_name between two commits.
+
+    Parameters
+    --------
+        commit1 : str
+            first commit to load pipeline data for.
+        commit2 : str
+            second commit to load pipeline data for.
+        pipeline_name : str
+            a pipeline to load pipeline data for.
+    """
     pipe1 = load_json(commit1, pipeline_name)
     pipe2 = load_json(commit2, pipeline_name)
     from kedro_diff.diff import KedroDiff
