@@ -132,10 +132,11 @@ def diff(
 ) -> None:
     """Diff two commits."""
     from kedro_diff.commit_parser import load_commit_metadata, parse_commit
+    from kedro_diff.get_pipelines import to_json
 
     commit1, commit2 = parse_commit(commit)
-    # to_json(metadata.project_path, commit1)
-    # to_json(metadata.project_path, commit2)
+    to_json(metadata.project_path, commit1)
+    to_json(metadata.project_path, commit2)
     meta1, meta2 = load_commit_metadata(commit)
     all_pipelines = sorted({*meta1["pipelines"], *meta2["pipelines"]})
     if stat:
