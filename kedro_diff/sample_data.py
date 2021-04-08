@@ -39,7 +39,6 @@ def create_simple_sample(
         >>> create_simple_sample(1, tagged=False)
         {'kedro_version': '0.17.2', 'pipeline': [{'name': 'node1', 'inputs': ['output0'], 'outputs': ['output1'], 'tags': ['']}]}
     """
-    # {"name": "node1", "inputs": [], "outputs": ["output1"], "tags": []}
     return {
         "kedro_version": kedro_version,
         "pipeline": [
