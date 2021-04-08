@@ -151,9 +151,9 @@ def load_json(commit: str, pipeline_name: str) -> Any:
                 Path(".kedro-diff")
                 / ("_".join([commit, pipeline_name]).replace("/", "_") + ".json")
             ).read_text()
-        )  # ["pipeline"]
+        )
     except FileNotFoundError:
-        return create_simple_sample(0)  # ["pipeline"]
+        return create_simple_sample(0)
 
 
 def diff_stat(commit1: str, commit2: str, pipeline_name: str = "__default__") -> None:
@@ -163,19 +163,6 @@ def diff_stat(commit1: str, commit2: str, pipeline_name: str = "__default__") ->
 
     diff = KedroDiff(pipe1, pipe2, name=pipeline_name)
     diff.stat()
-
-    # if len(pipe1) != len(pipe2):
-    # new_nodes = set([node["name"] for node in pipe2]).difference(
-    #     set([node["name"] for node in pipe1])
-    # )
-
-    # dropped_nodes = set([node["name"] for node in pipe1]).difference(
-    #     set([node["name"] for node in pipe2])
-    # )
-
-    # print(
-    #     f'[red]M[/red] {pipeline_name} | {len(new_nodes) + len(dropped_nodes)} [green]{"+" * len(new_nodes)}[/green][red]{"-"*len(dropped_nodes)}[/red]'
-    # )
 
 
 if __name__ == "__main__":
