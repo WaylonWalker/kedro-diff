@@ -38,7 +38,9 @@ def to_json(project_path: Union[str, Path], commit: str, verbose: int = 0) -> No
         logger.info(f"copying {project_path} into {tmpdirname}")
         copytree(project_path, tmpdirname)
         meta_path = (
-            Path() / ".kedro-diff" / (commit.replace("/", "_") + "-meta.json")
+            Path()
+            / ".kedro-diff"
+            / (commit.replace("/", "_") + "-commit-metadata.json")
         ).absolute()
         meta_path.parent.mkdir(exist_ok=True)
         subprocess.call(f"git checkout {commit} --quiet", shell=True, cwd=tmpdirname)

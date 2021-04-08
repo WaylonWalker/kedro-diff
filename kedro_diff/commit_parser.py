@@ -69,17 +69,27 @@ def parse_commit(
     return commit1, commit2
 
 
-def get_meta(
-    commit: Union[str, Tuple[str, ...]], verbose: int = 0
+def load_commit_metadata(
+    commit: Union[str, Tuple[str, ...]],
+    verbose: int = 0,
+    root_dir: Union[str, Path] = ".",
 ) -> Tuple[Dict, Dict]:
     commit1, commit2 = parse_commit(commit)
     meta1 = json.loads(
-        (Path() / ".kedro-diff" / (commit1.replace("/", "_") + "-meta.json"))
+        (
+            Path(root_dir)
+            / ".kedro-diff"
+            / (commit1.replace("/", "_") + "-commit-metadata.json")
+        )
         .absolute()
         .read_text()
     )
     meta2 = json.loads(
-        (Path() / ".kedro-diff" / (commit2.replace("/", "_") + "-meta.json"))
+        (
+            Path(root_dir)
+            / ".kedro-diff"
+            / (commit2.replace("/", "_") + "-commit-metadata.json")
+        )
         .absolute()
         .read_text()
     )
