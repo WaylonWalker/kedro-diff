@@ -49,7 +49,6 @@ def parse_commit(
         commit2 = commit[1]
 
     # set to HEAD in case of `kedro diff branch`
-    # if len(commit) == 1:
     else:
         commit1 = "HEAD"
         commit2 = commit[0]
