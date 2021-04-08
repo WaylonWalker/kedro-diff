@@ -61,17 +61,21 @@ kedro diff develop..master
 
 - [x] commit parser
 - [x] get `pipeline.to_json()` for `__default__` for two different commits
-- [ ] get `pipeline.to_json()` for all pipelines for two different commits
+- [x] get `pipeline.to_json()` for all pipelines for two different commits
 - [x] --stat compares the number of nodes added or dropped in `__default__`
-- [ ] --stat compares the number of nodes added or dropped in all pipelines
+- [x] --stat compares the number of nodes added or dropped in all pipelines
+- [x] --stat compares attribute changes (inputs, outputs, tags) in all pipelines
 - [ ] compare input names
 - [ ] compare output names
-- [ ] speed up getting repeat commits by checking commit hash
+- [ ] speed up getting repeat pipelines from the same commit (no need to reaload a new session)
+- [ ] speed up getting repeat commits by checking commit hash (reuse existing json)
+- [ ] minimize untested code
 
 ### 2.0.0
 
 _super-size `pipeline.to_json()`_
-
+- [ ] compare all attributes on a node ( not just inputs, outputs, tags)
+- [ ] allow users to specify custom to_json method
 - [ ] function names
 - [ ] function hashes
 - [ ] catalog _filepath
