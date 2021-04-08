@@ -2,8 +2,10 @@
 
 Parses user input into two commits to compare
 """
+import json
 import logging
-from typing import Tuple, Union
+from pathlib import Path
+from typing import Dict, Tuple, Union
 
 from more_itertools import flatten
 
@@ -47,7 +49,6 @@ def parse_commit(
         commit2 = commit[1]
 
     # set to HEAD in case of `kedro diff branch`
-    # if len(commit) == 1:
     else:
         commit1 = "HEAD"
         commit2 = commit[0]
@@ -65,6 +66,33 @@ def parse_commit(
     logger.info(f"comparing {commit1} to {commit2}")
 
     return commit1, commit2
+
+
+def load_commit_metadata(
+    commit: Union[str, Tuple[str, ...]],
+    verbose: int = 0,
+    root_dir: Union[str, Path] = ".",
+) -> Tuple[Dict, Dict]:
+    commit1, commit2 = parse_commit(commit)
+    meta1 = json.loads(
+        (
+            Path(root_dir)
+            / ".kedro-diff"
+            / (commit1.replace("/", "_") + "-commit-metadata.json")
+        )
+        .absolute()
+        .read_text()
+    )
+    meta2 = json.loads(
+        (
+            Path(root_dir)
+            / ".kedro-diff"
+            / (commit2.replace("/", "_") + "-commit-metadata.json")
+        )
+        .absolute()
+        .read_text()
+    )
+    return meta1, meta2
 
 
 if __name__ == "__main__":
