@@ -40,7 +40,6 @@ from kedro_diff.errors import KedroDiffError
         (("main..master..develop..mine..yours..ours..thiers"), KedroDiffError),
         ((), KedroDiffError),
         ((""), KedroDiffError),
-        # pytest.param(("master", "main", "develop"), 42, marks=pytest.mark.xfail),
     ],
 )
 def test_parse(commit, expected):
