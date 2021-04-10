@@ -89,8 +89,12 @@ from kedro_diff.commit_parser import load_commit_metadata
 def test_load_commit_metadata(tmpdir, runargs):
     def run(meta1, meta2):
         p = tmpdir.mkdir(".kedro-diff")
-        meta_file1 = p.join(f"{meta1['commit'].replace('/', '_')}-commit-metadata.json")
-        meta_file2 = p.join(f"{meta2['commit'].replace('/', '_')}-commit-metadata.json")
+        meta_file1 = p.join(
+            f"{meta1['commit'].replace('/', '_').replace(' ', '_')}-commit-metadata.json"
+        )
+        meta_file2 = p.join(
+            f"{meta2['commit'].replace('/', '_').replace(' ', '_')}-commit-metadata.json"
+        )
         meta_file1.write(json.dumps(meta1))
         meta_file2.write(json.dumps(meta2))
         load_commit_metadata(f"{meta1['commit']}..{meta2['commit']}", root_dir=tmpdir)
