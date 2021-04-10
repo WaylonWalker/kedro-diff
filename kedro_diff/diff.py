@@ -5,6 +5,7 @@ Core diffing logic for kedro diff.
 from typing import Dict
 
 from rich.console import Console
+from rich.panel import Panel
 
 from kedro_diff.sample_data import create_simple_sample
 
@@ -162,6 +163,25 @@ class KedroDiff:
     def stat(self) -> None:
         self.console.print(self._stat_msg)
 
+    def diff(self) -> None:
+        if self.num_changes == 0:
+            return
+        self.console.print(
+            Panel(
+                f"modified: {self.name.ljust(88)}",
+                title="[bright_black]kedro-diff[/bright_black]",
+                title_align="right",
+                expand=False,
+            ),
+        )
+        for node in sorted(self.new_nodes):
+            self.console.print(f"[green]+ {node}[/green]")
+        for node in sorted(self.dropped_nodes):
+            self.console.print(f"[red]- {node}[/red]")
+        self.console.print(
+            f"{self.num_adds} insertions([green]+[/green]), {self.num_drops} deletions([red]-[/red])"
+        )
+
 
 def example() -> None:
     from copy import deepcopy
@@ -197,9 +217,25 @@ def example() -> None:
         name="twelve_new_nodes_ten_dropped_nodes",
     ).stat()
 
-    KedroDiff(pipe10, pipe10_change_one_input, name="ten_nodes_one_input_change").stat()
+    diff_change_one_input = KedroDiff(
+        pipe10, pipe10_change_one_input, name="ten_nodes_one_input_change"
+    )
+    diff_change_one_input.stat()
 
     KedroDiff(
         pipe10, pipe10_change_one_output, name="ten_nodes_one_output_change"
     ).stat()
     KedroDiff(pipe10, pipe10_change_one_tag, name="ten_nodes_one_tag_change").stat()
+
+    console.print("\n\n")
+    console.print("[brightblack]KedroDiff.diff()[/]\n")
+
+    KedroDiff(create_simple_sample(1), create_simple_sample(1)).diff()
+    KedroDiff(create_simple_sample(0), create_simple_sample(1)).diff()
+    KedroDiff(
+        create_simple_sample(10, name_prefix="first"),
+        create_simple_sample(12),
+        name="twelve_new_nodes_ten_dropped_nodes",
+    ).diff()
+
+    diff_change_one_input.diff()
