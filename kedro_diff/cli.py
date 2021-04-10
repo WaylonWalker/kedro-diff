@@ -8,6 +8,8 @@ import click
 from kedro.framework.session import KedroSession
 from rich import print
 
+from kedro_diff.diff import KedroDiff
+
 from .sample_data import create_simple_sample
 
 if TYPE_CHECKING:
@@ -130,7 +132,7 @@ def get_json(
 def diff(
     metadata: "ProjectMetadata", verbose: int, commit: Tuple[str, ...], stat: bool
 ) -> None:
-    """Diff two commits."""
+    """ Diff two commits."""
     from kedro_diff.commit_parser import load_commit_metadata, parse_commit
     from kedro_diff.get_pipelines import to_json
 
@@ -139,9 +141,15 @@ def diff(
     to_json(metadata.project_path, commit2)
     meta1, meta2 = load_commit_metadata(commit)
     all_pipelines = sorted({*meta1["pipelines"], *meta2["pipelines"]})
-    if stat:
-        for pipeline in all_pipelines:
-            diff_stat(commit1, commit2, pipeline)
+    for pipeline in all_pipelines:
+        # diff_stat(commit1, commit2, pipeline)
+        pipe1 = load_json(commit1, pipeline)
+        pipe2 = load_json(commit2, pipeline)
+        diff = KedroDiff(pipe1, pipe2, name=pipeline)
+        if stat:
+            diff.stat()
+        else:
+            diff.diff()
 
 
 def load_json(commit: str, pipeline_name: str) -> Any:
@@ -187,7 +195,6 @@ def diff_stat(commit1: str, commit2: str, pipeline_name: str = "__default__") ->
     """
     pipe1 = load_json(commit1, pipeline_name)
     pipe2 = load_json(commit2, pipeline_name)
-    from kedro_diff.diff import KedroDiff
 
     diff = KedroDiff(pipe1, pipe2, name=pipeline_name)
     diff.stat()
