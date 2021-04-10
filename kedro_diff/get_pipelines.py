@@ -40,13 +40,15 @@ def to_json(project_path: Union[str, Path], commit: str, verbose: int = 0) -> No
         meta_path = (
             Path()
             / ".kedro-diff"
-            / (commit.replace("/", "_") + "-commit-metadata.json")
+            / (commit.replace("/", "_").replace(" ", "_") + "-commit-metadata.json")
         ).absolute()
         meta_path.parent.mkdir(exist_ok=True)
-        subprocess.call(f"git checkout {commit} --quiet", shell=True, cwd=tmpdirname)
+        subprocess.call(
+            f'git checkout "{commit}" --force --quiet', shell=True, cwd=tmpdirname
+        )
 
         subprocess.call(
-            f"kedro get-json --meta --output {meta_path} --quiet --commit {commit}",
+            f'kedro get-json --meta --output {meta_path} --quiet --commit "{commit}"',
             shell=True,
             cwd=tmpdirname,
         )
