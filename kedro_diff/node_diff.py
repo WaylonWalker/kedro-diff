@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Optional, Tuple
+from typing import TYPE_CHECKING, List, Optional, Tuple, Union, Dict
 
 from rich.console import Console
 
@@ -14,8 +14,8 @@ class NodeDiff:
 
     def __init__(
         self,
-        node1: Optional["Node"] = None,
-        node2: Optional["Node"] = None,
+        node1: Optional[Dict] = None,
+        node2: Optional[Dict] = None,
         name: Optional[str] = None,
         verbose_level: int = 1,
     ) -> None:
@@ -48,21 +48,11 @@ class NodeDiff:
         return self.node2 is None
 
     @property
-    def mod_name(self) -> Optional[str]:
-        if not self.is_changed:
-            return self.name
-        if self.is_new:
-            return self.name
-        if self.is_deleted:
-            return f"[strike]{self.name}[/strike]"
-
-    @property
     def attrs(self) -> List:
         if self.is_deleted:
             _node = self.node1
         else:
             _node = self.node2
-        # breakpoint()
         return [a for a in _node.keys() if not a.startswith("_")]
 
     def get_attr(self, attr) -> Tuple:
@@ -118,7 +108,7 @@ class NodeDiff:
             # self.console.print(f"[green]    outputs: {self.node2.outputs}")
             # self.console.print(f"[green]    tags: {self.node2.tags}")
         elif self.is_deleted:
-            self.console.print(f"[red]- {self.mod_name}")
+            self.console.print(f"[red]- [strike]{self.name}[/strike]")
             for attr in self.attrs:
                 attr1, _ = self.get_attr(attr)
                 if attr1 is not None:

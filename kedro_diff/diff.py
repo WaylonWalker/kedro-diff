@@ -2,12 +2,14 @@
 
 Core diffing logic for kedro diff.
 """
-from typing import Dict
+from typing import Dict, List
 
 from rich.console import Console
 from rich.panel import Panel
 
 from kedro_diff.sample_data import create_simple_sample
+
+from .node_diff import NodeDiff
 
 
 class KedroDiff:
@@ -71,6 +73,19 @@ class KedroDiff:
         return cls(pipe1=pipe1, pipe2=pipe2, name=name)
 
     @property
+    def all_nodes(self) -> List:
+        return sorted(
+            list(
+                set(
+                    [
+                        *[node["name"] for node in self.pipe2],
+                        *[node["name"] for node in self.pipe1],
+                    ]
+                )
+            )
+        )
+
+    @property
     def new_nodes(self) -> set:
         """
         Compares
@@ -112,20 +127,22 @@ class KedroDiff:
         return self.change_attr("tags")
 
     def change_attr(self, attr: str) -> set:
-        return set(
-            [
-                str({node["name"]: node[attr]})
-                for node in self.pipe2
-                if node["name"] in self.not_new_dropped_nodes
-            ]
-        ).difference(
-            set(
-                [
-                    str({node["name"]: node[attr]})
-                    for node in self.pipe1
-                    if node["name"] in self.not_new_dropped_nodes
-                ]
+        return {
+            (
+                node["name"],
+                tuple(node[attr]),
             )
+            for node in self.pipe2
+            if node["name"] in self.not_new_dropped_nodes
+        }.difference(
+            {
+                (
+                    node["name"],
+                    tuple(node[attr]),
+                )
+                for node in self.pipe1
+                if node["name"] in self.not_new_dropped_nodes
+            }
         )
 
     @property
@@ -174,13 +191,62 @@ class KedroDiff:
                 expand=False,
             ),
         )
-        for node in sorted(self.new_nodes):
-            self.console.print(f"[green]+ {node}[/green]")
-        for node in sorted(self.dropped_nodes):
-            self.console.print(f"[red]- {node}[/red]")
-        self.console.print(
-            f"{self.num_adds} insertions([green]+[/green]), {self.num_drops} deletions([red]-[/red])"
-        )
+        # for node in self.pipe1:
+        #     self.console.print(node["name"])
+        #     self.console.print("  " + " ".join(node["inputs"]))
+        #     self.console.print("  " + " ".join(node["outputs"]))
+        #     self.console.print("  " + " ".join(node["tags"]))
+        for node in self.all_nodes:
+            try:
+                node1 = [_node for _node in self.pipe1 if _node["name"] == node][0]
+            except IndexError:
+                node1 = None
+            try:
+                node2 = [_node for _node in self.pipe2 if _node["name"] == node][0]
+            except IndexError:
+                node2 = None
+
+            NodeDiff(node1, node2, node).diff()
+        # for node_name in sorted(self.new_nodes):
+        #     self.console.print(f"[green]+ {node_name}[/green]")
+        #     self.print_node(node_name, "[green]")
+
+        # for node in sorted(self.dropped_nodes):
+        #     self.console.print(f"[red]- {node}[/red]")
+        #     self.print_node(node_name, "[red]")
+        # self.console.print(
+        #     f"{self.num_adds} insertions([green]+[/green]), {self.num_drops} deletions([red]-[/red])"
+        # )
+        # self.console.print("input_change")
+        # # self.console.print(self.change_input)
+        # for node in self.change_input:
+        #     self.console.print(f"[gold1]- {node[0]}[/gold1]")
+        #     for input in node[1]:
+        #         self.console.print(f"[gold1]  {input}[/gold1]")
+        # self.console.print("output_change")
+        # self.console.print(self.change_output)
+        # self.console.print("input_change")
+        # self.console.print(self.change_tag)
+
+    # def print_node(self, node_name, style) -> None:
+    #     try:
+    #         node1 = [n for n in self.pipe1 if n["name"] == node_name][0]
+    #     except IndexError:
+    #         node1 = None
+    #     try:
+    #         node2 = [n for n in self.pipe2 if n["name"] == node_name][0]
+    #     except IndexError:
+    #         node2 = None
+
+    #     if node1:
+    #         self.console.print(style + "  " + " ".join(node1["inputs"]))
+    #         self.console.print(style + "  " + " ".join(node1["outputs"]))
+    #         self.console.print(style + "  " + " ".join(node1["tags"]))
+
+    #     if node2:
+    #         self.console.print(style + "  " + " ".join(node2["inputs"]))
+    #         self.console.print(style + "  " + " ".join(node2["outputs"]))
+    #         self.console.print(style + "  " + " ".join(node2["tags"]))
 
 
 def example() -> None:
@@ -189,7 +255,7 @@ def example() -> None:
     pipe10 = create_simple_sample(10)
 
     pipe10_change_one_input = deepcopy(pipe10)
-    pipe10_change_one_input["pipeline"][2]["inputs"] = ["input1"]
+    pipe10_change_one_input["pipeline"][2]["inputs"] = ["new_input"]
 
     pipe10_change_one_output = deepcopy(pipe10)
     pipe10_change_one_output["pipeline"][2]["outputs"] = ["output1"]
