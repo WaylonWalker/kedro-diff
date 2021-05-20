@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Optional, Tuple, Union, Dict
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 
 from rich.console import Console
 
@@ -36,6 +36,7 @@ class NodeDiff:
     def is_changed(self) -> bool:
         return self.node1 != self.node2
 
+    @property
     def is_none(self) -> bool:
         return self.node1 is self.node2 is None
 
