@@ -54,7 +54,12 @@ class NodeDiff:
             _node = self.node1
         else:
             _node = self.node2
-        return [a for a in _node.keys() if not a.startswith("_")]
+        if self.is_none:
+            return []
+        try:
+            return [a for a in _node.keys() if not a.startswith("_")]
+        except AttributeError:
+            return [a for a in dir(_node) if not a.startswith("_")]
 
     def get_attr(self, attr) -> Tuple:
         try:
@@ -83,16 +88,28 @@ class NodeDiff:
 
     def diff_attr(self, attr) -> None:
         attr1, attr2 = self.get_attr(attr)
-        if callable(attr1) or callable(attr2):
-            return
+        attr1 = "" if attr1 is None else attr1
+        attr2 = "" if attr2 is None else attr2
         if attr1 != attr2:
             attr_name = f"{attr}:      "[:10]
             self.console.print(
-                f"[gold1]    {attr_name} [red][strike]{attr1}[/strike] [green]{attr2}"
+                f"[{self.diff_color}]    {attr_name} [red][strike]{attr1}[/strike] [green]{attr2}"
             )
 
+    def diff_attrs(self):
+        for attr in self.attrs:
+            self.diff_attr(attr)
+
+    @property
+    def diff_color(self):
+        if self.is_deleted:
+            return "red"
+        if self.is_new:
+            return "green"
+        return "gold1"
+
     def diff(self) -> None:
-        if not self.is_none:
+        if self.is_none:
             if self.verbose_level > 1:
                 self.console.print(f"[bright_black]  {self.name} is None")
         elif not self.is_changed:
@@ -100,64 +117,54 @@ class NodeDiff:
                 self.console.print(f"[bright_black]  {self.name} is unchanged")
         elif self.is_new:
             self.console.print(f"[green]+ {self.name}")
-            for attr in self.attrs:
-                _, attr2 = self.get_attr(attr)
-                if attr2 is not None:
-                    if len(attr2) > 0:
-                        self.console.print(f"[green]    {attr}: {attr2}")
-            # self.console.print(f"[green]    inputs: {self.node2.inputs}")
-            # self.console.print(f"[green]    outputs: {self.node2.outputs}")
-            # self.console.print(f"[green]    tags: {self.node2.tags}")
+            self.diff_attrs()
+            # for attr in self.attrs:
+            #     _, attr2 = self.get_attr(attr)
+            #     if attr2 is not None:
+            #         if len(attr2) > 0:
+            #             self.console.print(f"[green]    {attr}: {attr2}")
         elif self.is_deleted:
             self.console.print(f"[red]- [strike]{self.name}[/strike]")
-            for attr in self.attrs:
-                attr1, _ = self.get_attr(attr)
-                if attr1 is not None:
-                    if len(attr1) > 0:
-                        self.console.print(f"[red]    {attr}: nodediff[strike]{attr1}")
+            self.diff_attrs()
+            # for attr in self.attrs:
+            #     attr1, _ = self.get_attr(attr)
+            #     if attr1 is not None:
+            #         if len(attr1) > 0:
+            #             self.console.print(f"[red]    {attr}: nodediff[strike]{attr1}")
         elif self.is_changed:
-            self.console.print(f"[green]+ [gold1]{self.name}")
-
-            for attr in self.attrs:
-                self.diff_attr(attr)
-        else:
-            print("else")
-            # if self.node1.inputs != self.node2.inputs:
-            #     self.console.print(
-            #         f"[gold1]    I: [red][strike]{self.node1.inputs}[/strike] [green]{self.node2.inputs}"
-            #     )
-            # if self.node1.outputs != self.node2.outputs:
-            #     self.console.print(
-            #         f"[gold1]    O: [red][strike]{self.node1.outputs}[/strike] [green]{self.node2.outputs}"
-            #     )
-            # if self.node1.tags != self.node2.tags:
-            #     self.console.print(
-            #         f"[gold1]    T: [red][strike]{self.node1.tags}[/strike] [green]{self.node2.tags}"
-            #     )
-            # if self.node1.tags != self.node2.tags:
-            #     self.console.print(
-            #         f"[gold1]    T: [red][strike]{self.node1.tags}[/strike] [green]{self.node2.tags}"
-            #     )
+            self.console.print(f"[green]+ [{self.diff_color}]{self.name}")
+            self.diff_attrs()
 
 
 if __name__ == "__main__":
     from kedro.pipeline.node import node
 
+    from kedro_diff.node_diff import NodeDiff
+
     node1 = node(lambda x: x, "input", "output", name="id")
     node1_b = node(lambda x: x, "input", "output", name="id")
-    node2 = node(lambda x: x, "input", "output", name="id")
+    node2 = node(lambda x: x, "input", "output", name="new-id")
     node3 = node(lambda x: x, "input3", "output", name="id")
     node4 = node(lambda x: x, "input", "output4", name="id")
     node5 = node(lambda x: x, "input", "output", tags=["new-tag"], name="id")
 
+    # Node that is the same node should not print
     NodeDiff(node1, node1, name="is").diff()
+    # Node that is the same node should print unchanged if verbose
     NodeDiff(node1, node1, name="verbose_is", verbose_level=2).diff()
+    # Node that is an equvalent node should not print
     NodeDiff(node1, node1_b, name="equal").diff()
+    # Node that is an equvalent node should print unchanged if verbose
     NodeDiff(node1, node1_b, name="verbose_equal", verbose_level=2).diff()
+    # Node Identifies as deleted
     NodeDiff(node1, None, name="deleted_node").diff()
+    # Node Identifies as none should not print
     NodeDiff(None, None, name="none").diff()
+    # Node Identifies as none should print unchanged if verbose
     NodeDiff(None, None, name="verbose_none", verbose_level=2).diff()
+    # Node Identifies as new
     NodeDiff(None, node1, name="new_node").diff()
+    #
     NodeDiff(node1, node2, name="name_changed").diff()
     NodeDiff(node1, node3, name="input_changed").diff()
     NodeDiff(node1, node4, name="output_changed").diff()
