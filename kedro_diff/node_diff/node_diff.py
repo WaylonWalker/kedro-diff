@@ -54,6 +54,7 @@ class NodeDiff:
             _node = self.node1
         else:
             _node = self.node2
+
         if self.is_none:
             return []
         try:
@@ -61,7 +62,7 @@ class NodeDiff:
         except AttributeError:
             return [a for a in dir(_node) if not a.startswith("_")]
 
-    def get_attr(self, attr) -> Tuple:
+    def get_attr(self, attr: str) -> Tuple:
         try:
             attr1 = getattr(self.node1, attr)
         except AttributeError:
@@ -86,7 +87,7 @@ class NodeDiff:
             return None, None
         return attr1, attr2
 
-    def diff_attr(self, attr) -> None:
+    def diff_attr(self, attr: str) -> None:
         attr1, attr2 = self.get_attr(attr)
         attr1 = "" if attr1 is None else attr1
         attr2 = "" if attr2 is None else attr2
@@ -96,12 +97,12 @@ class NodeDiff:
                 f"[{self.diff_color}]    {attr_name} [red][strike]{attr1}[/strike] [green]{attr2}"
             )
 
-    def diff_attrs(self):
+    def diff_attrs(self) -> None:
         for attr in self.attrs:
             self.diff_attr(attr)
 
     @property
-    def diff_color(self):
+    def diff_color(self) -> str:
         if self.is_deleted:
             return "red"
         if self.is_new:
@@ -141,12 +142,12 @@ if __name__ == "__main__":
 
     from kedro_diff.node_diff import NodeDiff
 
-    node1 = node(lambda x: x, "input", "output", name="id")
-    node1_b = node(lambda x: x, "input", "output", name="id")
-    node2 = node(lambda x: x, "input", "output", name="new-id")
-    node3 = node(lambda x: x, "input3", "output", name="id")
-    node4 = node(lambda x: x, "input", "output4", name="id")
-    node5 = node(lambda x: x, "input", "output", tags=["new-tag"], name="id")
+    node1 = node(lambda x: x, "input", "output", name="id").__dict__
+    node1_b = node(lambda x: x, "input", "output", name="id").__dict__
+    node2 = node(lambda x: x, "input", "output", name="new-id").__dict__
+    node3 = node(lambda x: x, "input3", "output", name="id").__dict__
+    node4 = node(lambda x: x, "input", "output4", name="id").__dict__
+    node5 = node(lambda x: x, "input", "output", tags=["new-tag"], name="id").__dict__
 
     # Node that is the same node should not print
     NodeDiff(node1, node1, name="is").diff()
