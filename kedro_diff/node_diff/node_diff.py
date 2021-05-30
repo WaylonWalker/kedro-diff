@@ -1,9 +1,6 @@
-from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple
 
 from rich.console import Console
-
-if TYPE_CHECKING:
-    from kedro.pipeline.node import Node
 
 
 class NodeDiff:
@@ -139,8 +136,6 @@ class NodeDiff:
 
 if __name__ == "__main__":
     from kedro.pipeline.node import node
-
-    from kedro_diff.node_diff import NodeDiff
 
     node1 = node(lambda x: x, "input", "output", name="id").__dict__
     node1_b = node(lambda x: x, "input", "output", name="id").__dict__

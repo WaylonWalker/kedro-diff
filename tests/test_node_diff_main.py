@@ -10,7 +10,7 @@ should_prints = [
 
 
 def test_node_diff_main(capsys, caplog):
-    from kedro_diff.node_diff import __main__
+    from kedro_diff.node_diff import __main__  # noqa F401
 
     assert caplog.text == ""
     captured = capsys.readouterr()
