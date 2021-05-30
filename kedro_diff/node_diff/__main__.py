@@ -2,12 +2,12 @@ from kedro.pipeline.node import node
 
 from kedro_diff.node_diff import NodeDiff
 
-node1 = node(lambda x: x, "input", "output", name="id")
-node1_b = node(lambda x: x, "input", "output", name="id")
-node2 = node(lambda x: x, "input", "output", name="new-id")
-node3 = node(lambda x: x, "input3", "output", name="id")
-node4 = node(lambda x: x, "input", "output4", name="id")
-node5 = node(lambda x: x, "input", "output", tags=["new-tag"], name="id")
+node1 = node(lambda x: x, "input", "output", name="id").__dict__
+node1_b = node(lambda x: x, "input", "output", name="id").__dict__
+node2 = node(lambda x: x, "input", "output", name="new-id").__dict__
+node3 = node(lambda x: x, "input3", "output", name="id").__dict__
+node4 = node(lambda x: x, "input", "output4", name="id").__dict__
+node5 = node(lambda x: x, "input", "output", tags=["new-tag"], name="id").__dict__
 
 # Node that is the same node should not print
 NodeDiff(node1, node1, name="is").diff()
