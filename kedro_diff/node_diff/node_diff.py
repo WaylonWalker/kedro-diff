@@ -1,6 +1,9 @@
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union, TYPE_CHECKING
 
 from rich.console import Console
+
+if TYPE_CHECKING:
+    from kedro.pipeline.node import Node
 
 
 class NodeDiff:
@@ -11,8 +14,8 @@ class NodeDiff:
 
     def __init__(
         self,
-        node1: Optional[Dict] = None,
-        node2: Optional[Dict] = None,
+        node1: Optional[Union[Dict, "Node"]] = None,
+        node2: Optional[Union[Dict, "Node"]] = None,
         name: Optional[str] = None,
         verbose_level: int = 1,
     ) -> None:
@@ -52,33 +55,36 @@ class NodeDiff:
         else:
             _node = self.node2
 
-        if self.is_none:
+        if _node is None:
             return []
-        try:
-            return [a for a in _node.keys() if not a.startswith("_")]
-        except AttributeError:
-            return [a for a in dir(_node) if not a.startswith("_")]
+        # try:
+        if isinstance(_node, dict):
+            _node_dict = _node
+            return [a for a in _node_dict.keys() if not a.startswith("_")]
+        # except AttributeError:
+        return [a for a in dir(_node) if not a.startswith("_")]
 
     def get_attr(self, attr: str) -> Tuple:
-        try:
-            attr1 = getattr(self.node1, attr)
-        except AttributeError:
-            try:
-                attr1 = self.node1[attr]
-            except KeyError:
-                attr1 = None
-            except TypeError:
-                attr1 = None
 
         try:
-            attr2 = getattr(self.node2, attr)
-        except AttributeError:
-            try:
+            if self.node1 is None:
+                attr1 = None
+            elif isinstance(self.node1, dict):
+                attr1 = self.node1[attr]
+            else:
+                attr1 = getattr(self.node1, attr)
+        except KeyError:
+            attr1 = None
+
+        try:
+            if self.node2 is None:
+                attr2 = None
+            elif isinstance(self.node2, dict):
                 attr2 = self.node2[attr]
-            except KeyError:
-                attr2 = None
-            except TypeError:
-                attr2 = None
+            else:
+                attr2 = getattr(self.node2, attr)
+        except KeyError:
+            attr2 = None
 
         if callable(attr1) or callable(attr2):
             return None, None
@@ -132,37 +138,3 @@ class NodeDiff:
         elif self.is_changed:
             self.console.print(f"[green]+ [{self.diff_color}]{self.name}")
             self.diff_attrs()
-
-
-if __name__ == "__main__":
-    from kedro.pipeline.node import node
-
-    node1 = node(lambda x: x, "input", "output", name="id").__dict__
-    node1_b = node(lambda x: x, "input", "output", name="id").__dict__
-    node2 = node(lambda x: x, "input", "output", name="new-id").__dict__
-    node3 = node(lambda x: x, "input3", "output", name="id").__dict__
-    node4 = node(lambda x: x, "input", "output4", name="id").__dict__
-    node5 = node(lambda x: x, "input", "output", tags=["new-tag"], name="id").__dict__
-
-    # Node that is the same node should not print
-    NodeDiff(node1, node1, name="is").diff()
-    # Node that is the same node should print unchanged if verbose
-    NodeDiff(node1, node1, name="verbose_is", verbose_level=2).diff()
-    # Node that is an equvalent node should not print
-    NodeDiff(node1, node1_b, name="equal").diff()
-    # Node that is an equvalent node should print unchanged if verbose
-    NodeDiff(node1, node1_b, name="verbose_equal", verbose_level=2).diff()
-    # Node Identifies as deleted
-    NodeDiff(node1, None, name="deleted_node").diff()
-    # Node Identifies as none should not print
-    NodeDiff(None, None, name="none").diff()
-    # Node Identifies as none should print unchanged if verbose
-    NodeDiff(None, None, name="verbose_none", verbose_level=2).diff()
-    # Node Identifies as new
-    NodeDiff(None, node1, name="new_node").diff()
-    #
-    NodeDiff(node1, node2, name="name_changed").diff()
-    NodeDiff(node1, node3, name="input_changed").diff()
-    NodeDiff(node1, node4, name="output_changed").diff()
-    NodeDiff(node1, node5, name="tag_changed", verbose_level=2).diff()
-    NodeDiff(node5, node1, name="tag_dropped", verbose_level=2).diff()
