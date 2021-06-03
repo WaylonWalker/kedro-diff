@@ -1,6 +1,7 @@
 """kedro_diff cli module."""
 import json
 import logging
+import subprocess
 from pathlib import Path
 from typing import IO, TYPE_CHECKING, Any, Tuple
 
@@ -94,8 +95,6 @@ def get_json(
 
     session = KedroSession.create(metadata.package_name)
     context = session.load_context()
-
-    import subprocess
 
     meta_path = (
         Path(output.name)
