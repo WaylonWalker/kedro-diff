@@ -80,7 +80,6 @@ def get_json(
     quiet: bool,
     pipeline_name: str = "__default__",
     commit: str = "HEAD",
-    meta: bool = False,
 ) -> None:
     """Get pipeline json from project context."""
     if quiet:
