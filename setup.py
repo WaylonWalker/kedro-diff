@@ -38,8 +38,9 @@ setup(
     install_requires=requires,
     extras_require={"dev": dev_requires},
     entry_points={
-        "kedro.global_commands": ["kedro-diff = kedro_diff.cli:cli"],
+        # "kedro.global_commands": ["kedro-diff = kedro_diff.cli:cli"],
         "kedro.project_commands": ["kedro-diff = kedro_diff.cli:cli"],
+        # "kedro.cli_hooks": ["kedro-diff = kedro_diff.cli:cli_hooks"],
         "console_scripts": ["kedro-diff = kedro_diff.cli:cli"],
     },
 )
