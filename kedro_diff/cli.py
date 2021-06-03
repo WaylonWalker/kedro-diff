@@ -95,27 +95,33 @@ def get_json(
     session = KedroSession.create(metadata.package_name)
     context = session.load_context()
 
-    if meta:
-        import subprocess
+    import subprocess
 
-        sha = (
-            subprocess.check_output(["git", "rev-parse", "HEAD"])
-            .strip()
-            .decode("utf-8")
+    meta_path = (
+        Path(output.name)
+        / (commit.replace("/", "_").replace(" ", "_") + "-commit-metadata.json")
+    ).absolute()
+
+    sha = subprocess.check_output(["git", "rev-parse", "HEAD"]).strip().decode("utf-8")
+
+    diffmeta = {
+        "commit": commit,
+        "sha": sha,
+        "pipelines": list(context.pipelines.keys()),
+    }
+    meta_path.write_text(json.dumps(diffmeta))
+
+    for pipeline_name, pipeline in context.pipelines.items():
+        output_file = Path(output.name) / (
+            "_".join([commit, pipeline_name]).replace("/", "_") + ".json"
         )
-
-        diffmeta = {
-            "commit": commit,
-            "sha": sha,
-            "pipelines": list(context.pipelines.keys()),
-        }
-        output.write(json.dumps(diffmeta).encode("utf-8"))
-        return
-
-    pipeline: str = context.pipelines[pipeline_name].to_json()  # type: ignore
-    if verbose >= 0:
-        print(pipeline)
-    output.write(pipeline.encode("utf-8"))
+        # pipeline: str = context.pipelines[pipeline_name].to_json()  # type: ignore
+        pipeline = pipeline.to_json()
+        if verbose >= 0:
+            print(pipeline)
+        # output_file.write_text(pipeline.encode("utf-8"))
+        # breakpoint()
+        output_file.write_text(pipeline)
     return
 
 
@@ -142,7 +148,6 @@ def diff(
     meta1, meta2 = load_commit_metadata(commit)
     all_pipelines = sorted({*meta1["pipelines"], *meta2["pipelines"]})
     for pipeline in all_pipelines:
-        # diff_stat(commit1, commit2, pipeline)
         pipe1 = load_json(commit1, pipeline)
         pipe2 = load_json(commit2, pipeline)
         diff = KedroDiff(pipe1, pipe2, name=pipeline)
