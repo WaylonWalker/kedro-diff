@@ -18,7 +18,14 @@ def copytree(
     ignore: Optional[Callable] = None,
 ) -> None:
     """Copy src director into dst directory."""
-    for item in os.listdir(str(src)):
+    ignore_items = [
+        ".envrc",
+        ".venv",
+        ".kedro-diff",
+    ]
+    items = [item for item in os.listdir(str(src)) if item not in ignore_items]
+
+    for item in items:
         s = os.path.join(src, item)
         d = os.path.join(dst, item)
         if os.path.isdir(s):
