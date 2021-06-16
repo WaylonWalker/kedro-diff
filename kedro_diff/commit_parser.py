@@ -78,7 +78,7 @@ def load_commit_metadata(
         (
             Path(root_dir)
             / ".kedro-diff"
-            / (commit1.replace("/", "_") + "-commit-metadata.json")
+            / (commit1.replace("/", "_").replace(" ", "_") + "-commit-metadata.json")
         )
         .absolute()
         .read_text()
@@ -87,7 +87,7 @@ def load_commit_metadata(
         (
             Path(root_dir)
             / ".kedro-diff"
-            / (commit2.replace("/", "_") + "-commit-metadata.json")
+            / (commit2.replace("/", "_").replace(" ", "_") + "-commit-metadata.json")
         )
         .absolute()
         .read_text()
