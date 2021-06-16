@@ -79,12 +79,9 @@ def get_json(
             "_".join([commit, pipeline_name]).replace("/", "_").replace(" ", "_")
             + ".json"
         )
-        # pipeline: str = context.pipelines[pipeline_name].to_json()  # type: ignore
         pipeline = pipeline.to_json()
         if verbose >= 0:
             print(pipeline)
-        # output_file.write_text(pipeline.encode("utf-8"))
-        # breakpoint()
         output_file.write_text(pipeline)
     return
 

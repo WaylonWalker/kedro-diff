@@ -57,11 +57,9 @@ class NodeDiff:
 
         if _node is None:
             return []
-        # try:
         if isinstance(_node, dict):
             _node_dict = _node
             return [a for a in _node_dict.keys() if not a.startswith("_")]
-        # except AttributeError:
         return [a for a in dir(_node) if not a.startswith("_")]
 
     def get_attr(self, attr: str) -> Tuple:
@@ -122,19 +120,9 @@ class NodeDiff:
         elif self.is_new:
             self.console.print(f"[green]+ {self.name}")
             self.diff_attrs()
-            # for attr in self.attrs:
-            #     _, attr2 = self.get_attr(attr)
-            #     if attr2 is not None:
-            #         if len(attr2) > 0:
-            #             self.console.print(f"[green]    {attr}: {attr2}")
         elif self.is_deleted:
             self.console.print(f"[red]- [strike]{self.name}[/strike]")
             self.diff_attrs()
-            # for attr in self.attrs:
-            #     attr1, _ = self.get_attr(attr)
-            #     if attr1 is not None:
-            #         if len(attr1) > 0:
-            #             self.console.print(f"[red]    {attr}: nodediff[strike]{attr1}")
         elif self.is_changed:
             self.console.print(f"[green]+ [{self.diff_color}]{self.name}")
             self.diff_attrs()
