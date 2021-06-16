@@ -36,6 +36,14 @@ def copytree(
 
 def to_json(project_path: Union[str, Path], commit: str, verbose: int = 0) -> None:
     """Get json from specific commit."""
+    pipeline_path = (Path() / ".kedro-diff").absolute()
+    meta_path = (
+        Path(pipeline_path.name)
+        / (commit.replace("/", "_").replace(" ", "_") + "-commit-metadata.json")
+    ).absolute()
+    if meta_path.exists():
+        return
+
     with tempfile.TemporaryDirectory() as tmpdirname:
         logger = logging.getLogger(__name__)
         logger.setLevel(logging.INFO)
@@ -47,7 +55,6 @@ def to_json(project_path: Union[str, Path], commit: str, verbose: int = 0) -> No
             f'git checkout "{commit}" --force --quiet', shell=True, cwd=tmpdirname
         )
 
-        pipeline_path = (Path() / ".kedro-diff").absolute()
         subprocess.call(
             f"kedro get-json --output '{pipeline_path}' --commit '{commit}' --quiet",
             shell=True,

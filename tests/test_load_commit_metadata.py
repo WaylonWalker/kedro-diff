@@ -97,6 +97,8 @@ def test_load_commit_metadata(tmpdir, runargs):
         )
         meta_file1.write(json.dumps(meta1))
         meta_file2.write(json.dumps(meta2))
-        load_commit_metadata(f"{meta1['commit']}..{meta2['commit']}", root_dir=tmpdir)
+        load_commit_metadata(
+            f"{meta1['commit']}..{meta2['commit']}", root_dir=tmpdir, full_sha=False
+        )
 
     run(**runargs)

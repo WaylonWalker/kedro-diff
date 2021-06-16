@@ -46,8 +46,8 @@ def test_parse(commit, expected):
     """Test Commit input is parsed as expected."""
     if type(expected) == type and issubclass(expected, Exception):
         with pytest.raises(expected):
-            commit1, commit2 = parse_commit(commit)
+            commit1, commit2 = parse_commit(commit, full_sha=False)
     else:
-        commit1, commit2 = parse_commit(commit)
+        commit1, commit2 = parse_commit(commit, full_sha=False)
         assert commit1 == expected[0]
         assert commit2 == expected[1]

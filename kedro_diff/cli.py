@@ -116,13 +116,13 @@ def diff(
     logger = get_logger(verbose=verbose, quiet=quiet)
     logger.info(f"project path is set to {project_path}")
 
-    commit1, commit2 = parse_commit(commit)
+    commit1, commit2 = parse_commit(commit, full_sha=True)
     to_json(project_path, commit1)
     to_json(project_path, commit2)
 
     logger.info(f"Converted pipelines to json")
 
-    meta1, meta2 = load_commit_metadata(commit)
+    meta1, meta2 = load_commit_metadata(commit, full_sha=True)
     all_pipelines = sorted({*meta1["pipelines"], *meta2["pipelines"]})
     for pipeline in all_pipelines:
         pipe1 = load_json(commit1, pipeline)
