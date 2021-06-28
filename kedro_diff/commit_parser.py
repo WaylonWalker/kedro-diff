@@ -10,6 +10,8 @@ from typing import Dict, Tuple, Union
 from more_itertools import flatten
 
 from kedro_diff.errors import KedroDiffError
+from kedro_diff.logger import get_logger
+
 
 __version__ = "0.0.0"
 
@@ -60,9 +62,7 @@ def parse_commit(
         raise KedroDiffError(
             f"at least one commit must be passed to compare\n recieved {commit}"
         )
-    logger = logging.getLogger(__name__)
-    if verbose < 1:
-        logger.setLevel(logging.ERROR)
+    logger = get_logger(verbose=verbose)
     logger.info(f"comparing {commit1} to {commit2}")
 
     return commit1, commit2

@@ -49,7 +49,7 @@ def get_json(
     """Get pipeline json from project context."""
     if quiet:
         verbose = -1
-    logger = logging.getLogger(__name__)
+    logger = get_logger(verbose=verbose)
     logger.setLevel(logging.INFO)
     if verbose < 1:
         logger.setLevel(logging.ERROR)
@@ -113,10 +113,13 @@ def diff(
     except AttributeError:
         project_path = Path.cwd()
 
-    logger = get_logger(verbose=verbose, quiet=quiet)
+    if quiet:
+        verbose = -1
+
+    logger = get_logger(verbose=verbose)
     logger.info(f"project path is set to {project_path}")
 
-    commit1, commit2 = parse_commit(commit)
+    commit1, commit2 = parse_commit(commit, verbose=verbose)
     to_json(project_path, commit1)
     to_json(project_path, commit2)
 

@@ -35,9 +35,7 @@ def silent_loggers() -> None:
         logging.getLogger(logger).setLevel(logging.ERROR)
 
 
-def get_logger(verbose: int = 0, quiet: bool = False) -> logging.Logger:
-    if quiet:
-        verbose = -1
+def get_logger(verbose: int = 0) -> logging.Logger:
     logger = logging.getLogger("kedro-diff")
     logger.setLevel(logging.INFO)
     if verbose < 1:

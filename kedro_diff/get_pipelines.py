@@ -37,10 +37,7 @@ def copytree(
 def to_json(project_path: Union[str, Path], commit: str, verbose: int = 0) -> None:
     """Get json from specific commit."""
     with tempfile.TemporaryDirectory() as tmpdirname:
-        logger = logging.getLogger(__name__)
-        logger.setLevel(logging.INFO)
-        if verbose < 1:
-            logger.setLevel(logging.ERROR)
+        logger = get_logger(verbose=verbose)
         logger.info(f"copying {project_path} into {tmpdirname}")
         copytree(project_path, tmpdirname)
         subprocess.call(
