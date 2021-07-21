@@ -2,13 +2,14 @@
 
 Get json from a specific commit
 """
-import logging
 import os
 import shutil
 import subprocess
 import tempfile
 from pathlib import Path
 from typing import Callable, Optional, Union
+
+from kedro_diff.logger import get_logger
 
 
 def copytree(
