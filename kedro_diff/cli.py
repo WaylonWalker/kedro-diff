@@ -65,6 +65,9 @@ def get_json(
         / (commit.replace("/", "_").replace(" ", "_") + "-commit-metadata.json")
     ).absolute()
 
+    if not meta_path.parent.exists():
+        meta_path.parent.mkdir()
+
     sha = subprocess.check_output(["git", "rev-parse", "HEAD"]).strip().decode("utf-8")
 
     diffmeta = {
@@ -104,7 +107,7 @@ def diff(
     commit: Tuple[str, ...],
     stat: bool,
 ) -> None:
-    """ Diff two commits."""
+    """Diff two commits."""
     from kedro_diff.commit_parser import load_commit_metadata, parse_commit
     from kedro_diff.get_pipelines import to_json
 
