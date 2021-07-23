@@ -24,6 +24,10 @@ def parse_commit(
     parse_commit('develop..main')
 
     """
+    if len(commit) == 0:
+        raise KedroDiffError(
+            f"at least one commit must be passed to compare\n recieved {commit}"
+        )
     # split commits in case of `kedro diff main..branch`
     if isinstance(commit, str):
         if "..." in commit:
@@ -35,10 +39,6 @@ def parse_commit(
         if ".." in str(commit):
             return parse_commit(tuple(flatten([c.split("..") for c in commit])))
 
-    if len(commit) == 0:
-        raise KedroDiffError(
-            f"at least one commit must be passed to compare\n recieved {commit}"
-        )
     if len(commit) > 2:
         raise KedroDiffError(
             f"no more than 2 commits may be compared\n recieved {commit}"
@@ -56,10 +56,6 @@ def parse_commit(
     # overrite commit1 in cases of `kedro diff ..branch
     if commit1 == "":
         commit1 = "HEAD"
-    if commit2 == "":
-        raise KedroDiffError(
-            f"at least one commit must be passed to compare\n recieved {commit}"
-        )
     logger = get_logger(verbose=verbose)
     logger.info(f"comparing {commit1} to {commit2}")
 
