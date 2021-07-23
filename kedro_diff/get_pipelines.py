@@ -37,6 +37,13 @@ def copytree(
 
 def to_json(project_path: Union[str, Path], commit: str, verbose: int = 0) -> None:
     """Get json from specific commit."""
+    if verbose < 1:
+        pipes = {
+            "stdout": subprocess.DEVNULL,
+            "stderr": subprocess.DEVNULL,
+        }
+    else:
+        pipes = {}
     with tempfile.TemporaryDirectory() as tmpdirname:
         logger = get_logger(verbose=verbose)
         logger.info(f"copying {project_path} into {tmpdirname}")
@@ -50,6 +57,7 @@ def to_json(project_path: Union[str, Path], commit: str, verbose: int = 0) -> No
             f"kedro get-json --output '{pipeline_path}' --commit '{commit}' --quiet",
             shell=True,
             cwd=tmpdirname,
+            **pipes,
         )
 
 
