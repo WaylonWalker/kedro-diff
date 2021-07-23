@@ -42,7 +42,7 @@ def get_logger(verbose: int = 0) -> logging.Logger:
     if verbose < 1:
         logger.setLevel(logging.ERROR)
 
-    if verbose < 2:
+    if verbose < 0:
         silent_loggers()
         logger.setLevel(100)
 
