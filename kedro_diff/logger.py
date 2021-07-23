@@ -26,6 +26,7 @@ def silent_loggers() -> None:
         "kedro.runner",
         "kedro.runner.runner",
         "kedro.versioning.journal",
+        "kedro_telemetry.plugin",
         "py4",
     ]
     for logger in [
@@ -43,6 +44,6 @@ def get_logger(verbose: int = 0) -> logging.Logger:
 
     if verbose < 2:
         silent_loggers()
-        logger.setLevel(logging.NOTSET)
+        logger.setLevel(100)
 
     return logger
