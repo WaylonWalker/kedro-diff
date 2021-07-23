@@ -10,7 +10,7 @@ HomePage and documentation: https://diff.kedro.dev/
 Copyright (c) 2020, Waylon Walker.
 License: MIT (see LICENSE for details)
 """
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 __author__ = ("Waylon Walker",)
 __author_email__ = ("waylon@waylonwalker.com",)
 __license__ = "MIT"

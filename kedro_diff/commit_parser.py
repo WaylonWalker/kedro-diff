@@ -11,7 +11,7 @@ from more_itertools import flatten
 from kedro_diff.errors import KedroDiffError
 from kedro_diff.logger import get_logger
 
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 
 
 def parse_commit(

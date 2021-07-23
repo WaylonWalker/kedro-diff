@@ -30,7 +30,7 @@ with open("requirements_dev.txt", "r", encoding="utf-8") as f:
 
 setup(
     name=NAME,
-    version="0.0.0",
+    version="0.1.0",
     url="https://github.com/WaylonWalker/kedro-diff",
     packages=find_packages(),
     platforms="any",
