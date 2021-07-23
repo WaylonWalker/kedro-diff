@@ -36,7 +36,7 @@ def cli() -> None:
 )
 @click.option("-q", "--quiet", is_flag=True, help="runs completely quiet")
 @click.option("-p", "--pipeline-name", help="name of pipeline")
-@click.option("-p", "--commit", help="name of commit")
+@click.option("-c", "--commit", help="name of commit")
 @click.pass_obj
 def get_json(
     metadata: "ProjectMetadata",
@@ -54,6 +54,7 @@ def get_json(
     if verbose < 1:
         logger.setLevel(logging.ERROR)
 
+    # breakpoint()
     if verbose < 2:
         silent_loggers()
 
