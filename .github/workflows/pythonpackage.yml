@@ -36,3 +36,21 @@ jobs:
         run: mypy .
       - name: Test with pytest
         run: pytest
+      - name: build
+        run: |
+          pip install wheel
+          python setup.py sdist bdist_wheel
+          echo "ls dist"
+          ls dist
+          echo "------"
+      - name: pypi-publish
+        if: github.ref == 'refs/heads/main'
+        uses: pypa/gh-action-pypi-publish@v1.1.0
+        with:
+          # PyPI user
+          # Password for your PyPI user or an access toke
+          password: ${{ secrets.pypi_password }}
+          # The repository URL to use
+          # repository_url: # optional
+          # The target directory for distribution
+          # packages_dir: # optional, default is dist
