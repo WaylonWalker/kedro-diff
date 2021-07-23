@@ -47,20 +47,20 @@ def to_json(project_path: Union[str, Path], commit: str, verbose: int = 0) -> No
         )
 
         pipeline_path = (Path() / ".kedro-diff").absolute()
-    if verbose < 1:
-        subprocess.call(
-            f"kedro get-json --output '{pipeline_path}' --commit '{commit}' --quiet",
-            shell=True,
-            cwd=tmpdirname,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-    else:
-        subprocess.call(
-            f"kedro get-json --output '{pipeline_path}' --commit '{commit}' --quiet",
-            shell=True,
-            cwd=tmpdirname,
-        )
+        if verbose < 1:
+            subprocess.call(
+                f"kedro get-json --output '{pipeline_path}' --commit '{commit}' --quiet",
+                shell=True,
+                cwd=tmpdirname,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        else:
+            subprocess.call(
+                f"kedro get-json --output '{pipeline_path}' --commit '{commit}' --quiet",
+                shell=True,
+                cwd=tmpdirname,
+            )
 
 
 if __name__ == "__main__":
