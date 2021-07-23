@@ -50,8 +50,8 @@ def parse_commit(
 
     # set to HEAD in case of `kedro diff branch`
     else:
-        commit1 = "HEAD"
-        commit2 = commit[0]
+        commit1 = commit[0]
+        commit2 = "HEAD"
 
     # overrite commit1 in cases of `kedro diff ..branch
     if commit1 == "":
