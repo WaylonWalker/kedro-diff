@@ -16,7 +16,7 @@ from kedro_diff.sample_data import create_simple_sample
 if TYPE_CHECKING:
     from kedro.framework.startup import ProjectMetadata
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 @click.group(name="kedro-diff")
