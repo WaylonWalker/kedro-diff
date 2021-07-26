@@ -1,12 +1,17 @@
-## Unreleased
-_Currently a Work in Progress, Check back soon for an official release_
-
-please note that some of what is currently shown in the readme is (readme driven development)  They are upcoming features to the project.
-
 # kedro-diff
 
 
-kedro diff aims to be a familiar interface into comparing two points in history.  Git diffs are fantastic tools but often are too granular to see what has changed inside the pipeline.  `kedro diff` aims to be a familiar tool at a higher level so we can see changes to nodes (names, inputs, outputs, tags).
+`kedro-diff` aims to be a familiar interface into comparing two points in
+history.  Git diffs are fantastic tools but often are too granular to see what
+has changed inside the pipeline.  `kedro-diff` aims to be a familiar tool at a
+higher level so we can see changes to nodes (names, inputs, outputs, tags).
+
+## Installation
+
+
+``` bash
+pip install kedro-diff
+```
 
 ## Example
 
