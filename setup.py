@@ -37,6 +37,7 @@ setup(
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Plugins",
+        "Framework :: Kedro",
         "Intended Audience :: Developers",
         "Operating System :: Microsoft :: Windows",
         "Operating System :: MacOS",
